@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Credit: https://github.com/amanjain/heroku-buildpack-python-with-django-bower
+
+source $BIN_DIR/utils
+
+puts-missing() {
+    puts-warn "       $@ is not installed."
+    puts-warn "       Skipping: bower install."
+}
+
+bpwatch start bower-install
+
+if [ ! "$DISABLE_BOWER" ]; then
+    set +e
+
+    if [ -f $HOME/.profile.d/nodejs.sh ]; then
+	source "$HOME/.profile.d/nodejs.sh"
+	echo "-----> Preparing bower install"
+	if [ -f $HOME/node_modules/bower/bin/bower ]; then
+	    set-env PATH '$HOME/node_modules/bower/bin:$PATH'
+	    echo "       Running bower install..."
+	    bower install | indent
+	else
+	    puts-missing "bower"
+	fi
+    else
+	puts-missing "NodeJS"
+    fi
+
+    echo
+fi
+
+bpwatch stop bower-install
