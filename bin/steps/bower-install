@@ -19,7 +19,7 @@ if [ ! "$DISABLE_BOWER" ]; then
         if [ -f $HOME/node_modules/bower/bin/bower ]; then
             set-env PATH '$HOME/node_modules/bower/bin:$PATH'
             echo "       Running bower install..."
-            python $MANAGE_FILE bower install | indent
+            bower install | indent
         else
             puts-missing "bower"
         fi
